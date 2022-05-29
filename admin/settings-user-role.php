@@ -23,8 +23,10 @@ $result1 = $selectUser->execute();
 		</thead>
 		<tbody>
 
-		<?php ob_start(); ?>
-			<select name="" id="">
+
+		<?php # ---------------------   Start buffering for Status select -------------------------
+        ob_start(); ?>
+			<select name="status" id="">
 				<?php
 				$selectCategory = $conn_pdo->prepare("SELECT * FROM category where status = :status and url = :url");
 				$result1 = $selectCategory->execute([':status' => 'active', ':url' => 'list-status.php']);
@@ -33,13 +35,14 @@ $result1 = $selectUser->execute();
 				<?php } ?>
 			</select>
 		<?php
-			$status_ob = ob_get_contents();
+		$status_select = ob_get_contents();
 			ob_end_clean();
-		?>
+		# ---------------------   END buffering for Status select ------------------------- ?>
 
 
-		<?php ob_start(); ?>
-            <select name="" id="">
+		<?php # ---------------------   Start buffering for Role select -------------------------
+        ob_start(); ?>
+            <select name="role" id="">
                 <?php
                 $selectCategory = $conn_pdo->prepare("SELECT * FROM category where status = :status and url = :url");
                 $result = $selectCategory->execute([':status' => 'active', ':url' => 'list-role.php']);
@@ -48,24 +51,24 @@ $result1 = $selectUser->execute();
                 <?php } ?>
             </select>
 		<?php
-		$role_ob = ob_get_contents();
+		$role_select = ob_get_contents();
 		ob_end_clean();
-		?>
-
+		# ---------------------   END buffering for Role select ------------------------- ?>
 
         <?php while ($user = $selectUser->fetch(PDO::FETCH_ASSOC)) { ?>
-		<td><?= ++$count ?></td>
-		<td><?php echo $user['email']; ?></td>
-		<td>
-			<?= $status_ob ?>
-		</td>
-		<td>
-			<?= $role_ob ?>
-		</td>
-		<td><?php echo $user['date']; ?></td>
-		<td><button type="button" class="btn btn-primary" style="padding: 3px 10px">Update</button></td>
-		<td><button type="button" class="btn btn-danger" style="padding: 3px 10px">Delete</button></td>
-
+                <tr>
+                    <td><?= ++$count ?></td>
+                    <td><?php echo $user['email']; ?></td>
+                    <td>
+		                <?= $status_select ?>
+                    </td>
+                    <td>
+		                <?= $role_select ?>
+                    </td>
+                    <td><?php echo $user['date']; ?></td>
+                    <td><button type="button" class="btn btn-primary" style="padding: 3px 10px">Update</button></td>
+                    <td><button type="button" class="btn btn-danger" style="padding: 3px 10px">Delete</button></td>
+                </tr>
 		<?php } ?>
 		</tbody>
 	</table>
