@@ -1,12 +1,14 @@
 <?php include_once "includes/connect.php";
 $conn_pdo = PDOPgSQL();
+//var_dump($_SESSION);
 if ($_GET['exit'] == 1) {
+//	unset($_SESSION['email'], $_SESSION['user_id']);
     session_destroy();
     header("Location: login.php");
 }
 if (isset($_POST['password'])) {
 	$_POST['password'] = md5($_POST['password']);
-	$selectUser = $conn_pdo->prepare("SELECT `id` FROM users WHERE email = :email AND password = :password");
+	$selectUser = $conn_pdo->prepare("SELECT * FROM users WHERE email = :email AND password = :password");
 	$result = $selectUser->execute([
 		":email" => $_POST['email'],
 		":password" => $_POST['password']
@@ -16,7 +18,8 @@ if (isset($_POST['password'])) {
 	if ($num_rows > 0) {
 		$_SESSION['email'] = $_POST['email'];
 		$_SESSION['user_id'] = $rows[0]['id'];
-		$success = "You have successfully registered! <a href='index.php'>You can go to the main page</a>";
+		$_SESSION['role'] = $rows[0]['role'];
+		$success = "You have successfully registered! <a href='/'>You can go to the main page</a>";
 	} else {
 		$error = "Email or password is incorrect";
 	}

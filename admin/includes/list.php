@@ -41,7 +41,7 @@ if (isset($_POST['name'])) {
             </div>
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
-                    <button type="submit" class="btn btn-primary">Add</button>
+                    <button type="submit" class="btn btn-success">Add</button>
                 </div>
             </div>
         </form>
@@ -64,9 +64,11 @@ if (isset($_POST['name'])) {
 			?>
             <tr>
                 <td><?= ++$count ?></td>
-                <td><?php echo $item['name']; ?></td>`
-                <td><a href="?edit=<?= $item['id'] ?>">Update</a></td>
-                <td><a href="?del=<?= $item['id'] ?>">Delete</a></td>
+                <td><?php echo $item['name']; ?></td>
+                <td><button type="button" class="btn btn-primary" style="padding: 3px 10px"><a href="?edit=<?= $item['id'] ?>" class="nav-link">Update</a></button></td>
+                <td><button type="button" class="btn btn-danger" style="padding: 3px 10px"><a href="?del=<?= $item['id'] ?>" class="nav-link">Delete</a></button></td>
+<!--                <td><a href="?edit=--><?//= $item['id'] ?><!--">Update</a></td>-->
+<!--                <td><a href="?del=--><?//= $item['id'] ?><!--">Delete</a></td>-->
             </tr>
             <?php } ?>
             </tbody>
@@ -91,9 +93,11 @@ if (isset($_POST['name'])) {
 			    ?>
                 <tr>
                     <td><?= ++$count ?></td>
-                    <td><?php echo $item['name']; ?></td>`
-                    <td><a href="?edit=<?php echo $item['id']; ?>">Update</a></td>
-                    <td><a href="?rec=<?php echo $item['id']; ?>">Recover </a></td>
+                    <td><?php echo $item['name']; ?></td>
+                    <td><button type="button" class="btn btn-primary" style="padding: 3px 10px"><a href="?edit=<?= $item['id'] ?>" class="nav-link">Update</a></button></td>
+                    <td><button type="button" class="btn btn-warning" style="padding: 3px 10px"><a href="?rec=<?= $item['id'] ?>" class="nav-link">Recover</a></button></td>
+<!--                    <td><a href="?edit=--><?php //echo $item['id']; ?><!--">Update</a></td>-->
+<!--                    <td><a href="?rec=--><?php //echo $item['id']; ?><!--">Recover </a></td>-->
                 </tr>
 		    <?php } ?>
             </tbody>

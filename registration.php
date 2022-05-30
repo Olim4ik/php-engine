@@ -25,7 +25,8 @@ if (isset($_POST['email'])) {
         } else {
             $_SESSION['email'] = $_POST['email'];
             $_SESSION['user_id'] = $rows[0]['id'];
-	        $success = "You have successfully registered! <a href='index.php'>You can go to the main page</a>";
+	        $_SESSION['role'] = $rows[0]['role'];
+	        $success = "You have successfully registered! <a href='/'>You can go to the main page</a>";
         }
 	}
 }
