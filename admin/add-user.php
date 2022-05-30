@@ -7,6 +7,7 @@ if (isset($_POST['email'], $_POST['password'])) {
 	if (strlen($_POST['password']) < 6) {
 		$status = 'err';
 	} else {
+		$_POST['password'] = md5($_POST['password']);
 		$insertUser = $conn_pdo->prepare("INSERT INTO users (email, password) VALUES (:email, :password)");
 		$result = $insertUser->execute([
 			":email" => $_POST['email'],

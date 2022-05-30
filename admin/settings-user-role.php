@@ -31,7 +31,7 @@ $result1 = $selectUser->execute();
 	<h2>User's Role Setting</h2>
 	<p>Here is CRUD for users management. You can Update by clicking select buttons</p>
 
-    <!-- Modal -->
+    <!-- Add Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -51,13 +51,45 @@ $result1 = $selectUser->execute();
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary pull-left" data-dismiss="modal">Закрыть</button>
-                    <button type="button" onclick="addUser()" class="btn btn-success submitBtn">Сохранить изменения</button>
+
+                    <button type="button" class="btn btn-secondary pull-left" data-dismiss="modal">Close</button>
+                    <button type="button" onclick="addUser()" class="btn btn-success submitBtn">Save Changes</button>   <!-- onclick="addUser()" -->
                 </div>
             </div>
         </div>
     </div>
-    <!--    Modal end-->
+    <!--   Add Modal end-->
+
+
+    <!-- Update Modal-->
+    <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" id="exampleModalLabel">Update User Details</h2>
+                </div>
+                <div class="modal-body">
+                    <p class="statusMsg"></p>
+                    <div class="form-group">
+                        <label for="update_email">Email</label>
+                        <input type="email" required class="form-control" id="update_email" placeholder="Enter email">
+                    </div>
+                    <div class="form-group">
+                        <label for="update_password">Password</label>
+                        <input type="text" required class="form-control" id="update_password" placeholder="Enter password">
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button"  class="btn btn-secondary pull-left" data-dismiss="modal">Close</button>
+                    <button type="button" onclick="updateUser()" class="btn btn-success submitBtn">Save Changes</button>   <!-- onclick="addUser()" -->
+                    <input type="hidden" id="hidden_data">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--   Update Modal end-->
 
     <button id="add_user" type="button"  class="btn btn-success add_user" data-toggle="modal"
             data-target="#exampleModal" style="padding: 3px 10px; margin-left: 1240px; margin-bottom: 20px;">Add</button>
@@ -86,7 +118,6 @@ $result1 = $selectUser->execute();
             }
         ?>
 
-
         <?php
             $selectCategory = $conn_pdo->prepare("SELECT * FROM category where status = :status and url = :url");
             $result = $selectCategory->execute([':status' => 'active', ':url' => 'list-role.php']);
@@ -95,7 +126,6 @@ $result1 = $selectUser->execute();
                 array_push($role_array, $role['name']);
             }
         ?>
-
 
         <?php while ($user = $selectUser->fetch(PDO::FETCH_ASSOC)) {
 //	        echo '<pre>';
@@ -136,7 +166,11 @@ $result1 = $selectUser->execute();
                         </form>
                     </td>
                     <td><?php echo $user['date']; ?></td>
-                    <td><button type="button" class="btn btn-primary" style="padding: 3px 10px">Update</button></td>
+<!--                    <button id="add_user" type="button"  class="btn btn-success add_user" data-toggle="modal"-->
+<!--                            data-target="#exampleModal" style="padding: 3px 10px; margin-left: 1240px; margin-bottom: 20px;">Add</button>-->
+                    <?= '<td><button type="button" id="edit_user"
+                    data-id="'.$user['id'].'" data-target="#updateModal" data-toggle="modal"
+                    class="btn btn-primary"  style="padding: 3px 10px">Update</button></td>' ?> <!-- onclick="editUser('.$user['id'].')" -->
                     <td><button type="button" class="btn btn-danger" style="padding: 3px 10px">Delete</button></td>
                 </tr>
 		<?php } ?>
@@ -193,19 +227,53 @@ $result1 = $selectUser->execute();
                     $('.submitBtn').removeAttr("disabled");
                     $('.modal-body').css('opacity', '');
                 }
-                // success: function (data, status) {
-                //     if (status === 'success') {
-                //         // console.log(data);
-                //         // console.log(status);
-                //         $('.modal-body').html('<span style="color: green">Great job!</span>');
-                //         // $('#exampleModal').modal('hide');
-                //         location.reload();
-                //     } else {
-                //         $('.modal-body').html('<span style="color: red">Some problems</span>');
-                //     }
-                // }
-
             });
         }
     }
+
+    function editUser(update_id) {
+        $('#updateModal').modal('show');
+
+        $('#hidden_data').val(update_id);
+
+        $.post("update-user.php",{update_id:update_id}, function (data, status){
+            // console.log(data);
+            // console.log(status);
+            let user_id = JSON.parse(data);
+            $('#update_email').val(user_id.email);
+            $('#update_password').val(user_id.password);
+        });
+    }
+
+    $(document).on("click", "#edit_user",function () {
+
+        let id = $(this).attr('data-id')
+        $('#hidden_data').val(id);
+        console.log(id);
+
+        $.post("update-user.php",{update_id:id}, function (data, status){
+            // console.log(data);
+            // console.log(status);
+            let user_id = JSON.parse(data);
+            $('#update_email').val(user_id.email);
+            // $('#update_password').val(user_id.password);
+        });
+    });
+
+    function updateUser(){
+        let update_email = $('#update_email').val();
+        let update_password = $('#update_password').val();
+        let hidden_data = $('#hidden_data').val();
+
+        $.post('update-user.php', {
+            update_email: update_email,
+            update_password: update_password,
+            hidden_data: hidden_data,
+        }, function (data, status) {
+            $('#updateModal').modal('hide');
+            // location.reload();
+
+        })
+    }
+
 </script>
