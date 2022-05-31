@@ -237,8 +237,6 @@ $result1 = $selectUser->execute();
         $('#hidden_data').val(update_id);
 
         $.post("update-user.php",{update_id:update_id}, function (data, status){
-            // console.log(data);
-            // console.log(status);
             let user_id = JSON.parse(data);
             $('#update_email').val(user_id.email);
             $('#update_password').val(user_id.password);
@@ -252,8 +250,6 @@ $result1 = $selectUser->execute();
         console.log(id);
 
         $.post("update-user.php",{update_id:id}, function (data, status){
-            // console.log(data);
-            // console.log(status);
             let user_id = JSON.parse(data);
             $('#update_email').val(user_id.email);
             // $('#update_password').val(user_id.password);
@@ -271,8 +267,7 @@ $result1 = $selectUser->execute();
             hidden_data: hidden_data,
         }, function (data, status) {
             $('#updateModal').modal('hide');
-            // location.reload();
-
+            location.reload();
         })
     }
 
